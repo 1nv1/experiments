@@ -21,7 +21,7 @@ function setup() {
   canvas_w = positionInfo.width;
   createCanvas(canvas_w, canvas_h);
   slider_terms = createSlider(1, 20, 5);
-  slider_time = createSlider(1, 100, 10);
+  slider_time = createSlider(1, 100, 50);
   slider_amp = createSlider(20, canvas_h / 4, 75);
   sel = createSelect();
   sel.option('Sine');
