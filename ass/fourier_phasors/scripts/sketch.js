@@ -1,4 +1,3 @@
-
 // Based on Daniel Shiffman works
 // https://thecodingtrain.com/CodingChallenges/125-fourier-series.html
 // https://youtu.be/Mm2eYfj0SgA
@@ -16,18 +15,44 @@ let canvas_h;
 let canvas_w;
 
 function setup() {
+  var w = 150;
   var element = document.getElementById('p5canvas');
   var positionInfo = element.getBoundingClientRect();
   canvas_h = positionInfo.height;
   canvas_w = positionInfo.width;
   createCanvas(canvas_w, canvas_h);
-  slider_terms = createSlider(1, 20, 5);
+  text('Segmentos: ');
+
+  label_terms = createDiv('Segmentos: ');
+  label_terms.position(15, 15);
+  label_terms.style('color', '#FFFFFF');
+  slider_terms = createSlider(1, 30, 5);
+  slider_terms.parent(label_terms);
+  w += w;
+
+  label_time = createDiv('Velocidad: ');
+  label_time.position(w, 15);
+  label_time.style('color', '#FFFFFF');
   slider_time = createSlider(1, 100, 50);
-  slider_amp = createSlider(20, canvas_h / 4, 75);
+  slider_time.parent(label_time);
+  w += w;
+
+  label_amp = createDiv('Tamaño: ');
+  label_amp.position(w, 15);
+  label_amp.style('color', '#FFFFFF');
+  slider_amp = createSlider(10, canvas_h / 4);
+  slider_amp.parent(label_amp);
+  w += w;
+
+  label_func = createDiv('Funciones: ');
+  label_func.position(w, 15);
+  label_func.style('color', '#FFFFFF');
   sel = createSelect();
   sel.option('Sine');
   sel.option('Square');
   sel.option('Sawtooth');
+  sel.parent(label_func);
+
 }
 
 function draw() {
@@ -66,14 +91,15 @@ function draw() {
       y += radius * sin(n * time * 2 * Math.PI);
     }
 
-    stroke(255, 100);
+    fill(255);
+
+    stroke('rgb(255, 0, 0)');
     noFill();
     ellipse(prevx, prevy, radius * 2);
 
-    fill(255);
-    stroke(255);
-    line(prevx, prevy, x, y, 16);
-    //ellipse(x, y, 8);
+    stroke('rgb(0, 255,0)');
+    line(prevx, prevy, x, y);
+    ellipse(x, y, 4);
   }
   wave.unshift(y);
 
@@ -86,7 +112,7 @@ function draw() {
   }
   endShape();
 
-  time += 0.5 / slider_time.value();
+  time += 0.0001 * slider_time.value();
 
   if (wave.length > canvas_w / 2) {
     wave.pop();
