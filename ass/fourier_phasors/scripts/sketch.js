@@ -132,7 +132,7 @@ function draw() {
   text('Im(Z)', canvas_w / 4 + 10, 18);
   line(canvas_w / 4, 0, canvas_w / 4, canvas_h);
 
-  text('Re(Z)', canvas_w / 2 - 100, canvas_h / 2 - 20);
+  text('Re(Z)', canvas_w / 2 - 70, canvas_h / 2 - 10);
   line(0, canvas_h / 2, canvas_w / 2 - 20, canvas_h / 2);
 
   text('f(t)', canvas_w / 2 + 10, 18);
