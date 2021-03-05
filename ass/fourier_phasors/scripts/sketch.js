@@ -14,33 +14,44 @@ let sel;
 let canvas_h;
 let canvas_w;
 
+let kv;
+let old = {
+  data: { x: 0, y: 0, j: 0, n: 0, r: 0},
+  wave: []
+};
+let data = { x: 0, y: 0, j: 0, n: 0, r: 0};
+
 function setup() {
   var w = 150;
   var element = document.getElementById('p5canvas');
   var positionInfo = element.getBoundingClientRect();
   canvas_h = positionInfo.height;
   canvas_w = positionInfo.width;
+
+  kv = new kvdb('ass:phasors');
+  console.log(kv.id());
+
   createCanvas(canvas_w, canvas_h);
   text('Segmentos: ');
 
   label_terms = createDiv('Segmentos: ');
   label_terms.position(15, 15);
   label_terms.style('color', '#FFFFFF');
-  slider_terms = createSlider(1, 30, 5);
+  slider_terms = createSlider(1, 20, kv.get('terms'));
   slider_terms.parent(label_terms);
   w += w;
 
   label_time = createDiv('Velocidad: ');
   label_time.position(w, 15);
   label_time.style('color', '#FFFFFF');
-  slider_time = createSlider(1, 100, 50);
+  slider_time = createSlider(1, 100, kv.get('time'));
   slider_time.parent(label_time);
   w += w;
 
   label_amp = createDiv('Tamaño: ');
   label_amp.position(w, 15);
   label_amp.style('color', '#FFFFFF');
-  slider_amp = createSlider(10, canvas_h / 4);
+  slider_amp = createSlider(10, canvas_h / 4, kv.get('amp'));
   slider_amp.parent(label_amp);
   w += w;
 
@@ -48,66 +59,75 @@ function setup() {
   label_func.position(w, 15);
   label_func.style('color', '#FFFFFF');
   sel = createSelect();
-  sel.option('Sine');
-  sel.option('Square');
-  sel.option('Sawtooth');
+
+  fncs.forEach(function(item, idx) {
+    sel.option(item.name);
+  });
   sel.parent(label_func);
 
+  sel.selected(kv.get('function'));
+
+  if (kv.get('data') != 'undefined') {
+    old.data = kv.get('data');
+  }
+
+  if (kv.get('wave') != 'undefined') {
+    old.wave = kv.get('wave');
+  }
 }
+
+window.addEventListener("beforeunload", function (e) {
+  var confirmationMessage = "";
+  (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+  kv.set('function', sel.value());
+  kv.set('amp', slider_amp.value());
+  kv.set('time', slider_time.value());
+  kv.set('terms', slider_terms.value());
+  kv.set('data', data);
+  kv.set('wave', wave);
+  return confirmationMessage;                            //Webkit, Safari, Chrome
+});
 
 function draw() {
   background(0);
   translate(canvas_w / 4, canvas_h / 2);
+  let radius = slider_amp.value();
+  let i;
+  data = old.data;
+  wave = old.wave;
+  old.data = { x: 0, y: 0, j: 0, n: 0, r: 0};
 
-  let x = 0;
-  let y = 0;
+  for (i = data.j; i < slider_terms.value(); i++) {
+    let prevx = data.x;
+    let prevy = data.y;
 
-  for (let i = 0; i < slider_terms.value(); i++) {
-    let prevx = x;
-    let prevy = y;
-    let radius;
-    let n;
+    data.j = i;
 
-    if (sel.value() == 'Sine') {
-      if (i < 2) {
-        let n = i * 2 + 1;
-        radius = slider_amp.value();
-        y += radius * cos(time * Math.PI);
-        x += radius * sin(time * Math.PI) * Math.pow(-1, i);
+    fncs.forEach(function(item, idx) {
+      if (sel.value() == item.name) {
+        item.callback(data, radius);
       }
-    }
-
-    if (sel.value() == 'Square') {
-      n = i * 2 + 1;
-      radius = slider_amp.value() * (4 / (n * Math.PI));
-      x += radius * cos(n * time * 2 * Math.PI);
-      y += radius * sin(n * time * 2 * Math.PI);
-    }
-
-    if (sel.value() == 'Sawtooth') {
-      n = i + 1;
-      radius = slider_amp.value() * (-2 / (n * Math.PI)) * Math.pow(-1, n);
-      x += radius * cos(n * time * 2 * Math.PI);
-      y += radius * sin(n * time * 2 * Math.PI);
-    }
+    });
 
     fill(255);
 
     stroke('rgb(255, 0, 0)');
     noFill();
-    ellipse(prevx, prevy, radius * 2);
+    ellipse(prevx, prevy, data.r * 2);
 
     stroke('rgb(0, 255,0)');
-    line(prevx, prevy, x, y);
-    ellipse(x, y, 4);
+    line(prevx, prevy, data.x, data.y);
+    ellipse(data.x, data.y, 4);
   }
-  wave.unshift(y);
+  wave.unshift(data.y);
 
-  translate((canvas_h / 4) + slider_amp.value() * 1.2, 0);
-  line(x - (canvas_h / 4) - slider_amp.value() * 1.2, y, 0, wave[0]);
+  translate((canvas_h / 2) + data.r * 1.2, 0);
+  stroke('rgb(0, 0, 255)');
+  line(data.x - (canvas_h / 2) - data.r * 1.2, data.y, 0, wave[0]);
   beginShape();
   noFill();
-  for (let i = 0; i < wave.length; i++) {
+  stroke('rgb(0, 255, 0)');
+  for (i = 0; i < wave.length; i++) {
     vertex(i, wave[i]);
   }
   endShape();
@@ -117,4 +137,5 @@ function draw() {
   if (wave.length > canvas_w / 2) {
     wave.pop();
   }
+  old.wave = wave;
 }
