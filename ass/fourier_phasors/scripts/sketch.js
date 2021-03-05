@@ -21,6 +21,8 @@ let old = {
 };
 let data = { x: 0, y: 0, n: 0, r: 0};
 
+var step_w, step_h;
+
 function setup() {
   let kh = 30;
   let h = 30;
@@ -28,6 +30,9 @@ function setup() {
   let positionInfo = element.getBoundingClientRect();
   canvas_h = positionInfo.height;
   canvas_w = positionInfo.width;
+
+  step_w = canvas_w / 64;
+  step_h = canvas_h / 64;
 
   kv = new kvdb('ass:phasors');
   console.log(kv.id());
@@ -46,7 +51,7 @@ function setup() {
 
   gtime = createDiv('');
   gtime.position(15, h);
-  slider_time = createSlider(1, 50, kv.get('time', 20));
+  slider_time = createSlider(1, 40, kv.get('time', 20));
   slider_time.parent(gtime);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
@@ -118,11 +123,19 @@ window.addEventListener("beforeunload", function (e) {
 function draw() {
   background(0);
   let radius = slider_amp.value();
-  let i;
+  let i, j;
 
   data = old.data;
   wave = old.wave;
   old.data = { x: 0, y: 0, n: 0, r: 0};
+
+  // Grid
+  stroke('#88916b');
+  for (i = 0; i <= canvas_w; i += step_w) {
+    for (j = 0; j <= canvas_h; j += step_h) {
+      point(i, j);
+    }
+  }
 
   // Axis
   translate(0, 0);
@@ -130,7 +143,7 @@ function draw() {
   textSize(18);
 
   text('Im(Z)', canvas_w / 4 + 10, 18);
-  line(canvas_w / 4, 0, canvas_w / 4, canvas_h);
+  line(canvas_w / 4, 0, canvas_w / 4, canvas_h - 10);
 
   text('Re(Z)', canvas_w / 2 - 70, canvas_h / 2 - 10);
   line(0, canvas_h / 2, canvas_w / 2 - 20, canvas_h / 2);
