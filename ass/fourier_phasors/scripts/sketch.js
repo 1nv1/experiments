@@ -37,9 +37,9 @@ function setup() {
 
   gterms = createDiv('');
   gterms.position(15, h);
-  slider_terms = createSlider(1, 20, kv.get('terms', 5));
+  slider_terms = createSlider(1, 30, kv.get('terms', 5));
   slider_terms.parent(gterms);
-  label_terms = createSpan(' - Segmentos +');
+  label_terms = createSpan(' - Armónicos +');
   label_terms.style('color', '#FFFFFF');
   label_terms.parent(gterms);
   h += kh;
@@ -119,7 +119,7 @@ function draw() {
   background(0);
   let radius = slider_amp.value();
   let i;
-  let kr = 1.2;
+
   data = old.data;
   wave = old.wave;
   old.data = { x: 0, y: 0, j: 0, n: 0, r: 0};
@@ -132,11 +132,11 @@ function draw() {
   text('Im(Z)', canvas_w / 4 + 10, 18);
   line(canvas_w / 4, 0, canvas_w / 4, canvas_h);
 
-  text('Re(Z)', canvas_w / 2 - 100, canvas_h / 2 - 10);
+  text('Re(Z)', canvas_w / 2 - 100, canvas_h / 2 - 20);
   line(0, canvas_h / 2, canvas_w / 2 - 20, canvas_h / 2);
 
   text('f(t)', canvas_w / 2 + 10, 18);
-  line(canvas_w / 2, 0, canvas_w / 2, canvas_h);
+  line(canvas_w / 2, 0, canvas_w / 2, canvas_h - 10);
 
   text('t', canvas_w - 20, canvas_h / 2 - 10);
   line(canvas_w / 2, canvas_h / 2, canvas_w, canvas_h / 2);
@@ -169,14 +169,15 @@ function draw() {
   }
   wave.unshift(data.y);
 
-  translate((canvas_h / 2) + data.r * kr, 0);
+  let ref = (canvas_h / 2) + data.r;
+  translate(ref, 0);
   stroke('rgb(0, 0, 255)');
-  line(data.x - (canvas_h / 2) - data.r * kr, data.y, 0, wave[0]);
+  line(data.x - (canvas_h / 2) - data.r, data.y, canvas_w / 4 - ref, wave[0]);
   beginShape();
   noFill();
   stroke('rgb(0, 255, 0)');
   for (i = 0; i < wave.length; i++) {
-    vertex(i, wave[i]);
+    vertex(i + canvas_w / 4 - ref, wave[i]);
   }
   endShape();
 
