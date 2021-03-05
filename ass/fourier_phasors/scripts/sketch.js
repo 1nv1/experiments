@@ -2,7 +2,7 @@
 // https://thecodingtrain.com/CodingChallenges/125-fourier-series.html
 // https://youtu.be/Mm2eYfj0SgA
 
-let time = 0;
+let dt = 0;
 let wave = [];
 let path = [];
 
@@ -16,10 +16,10 @@ let canvas_w;
 
 let kv;
 let old = {
-  data: { x: 0, y: 0, j: 0, n: 0, r: 0},
+  data: { x: 0, y: 0, n: 0, r: 0},
   wave: []
 };
-let data = { x: 0, y: 0, j: 0, n: 0, r: 0};
+let data = { x: 0, y: 0, n: 0, r: 0};
 
 function setup() {
   let kh = 30;
@@ -37,7 +37,7 @@ function setup() {
 
   gterms = createDiv('');
   gterms.position(15, h);
-  slider_terms = createSlider(1, 30, kv.get('terms', 5));
+  slider_terms = createSlider(1, 50, kv.get('terms', 5));
   slider_terms.parent(gterms);
   label_terms = createSpan(' - Armónicos +');
   label_terms.style('color', '#FFFFFF');
@@ -46,7 +46,7 @@ function setup() {
 
   gtime = createDiv('');
   gtime.position(15, h);
-  slider_time = createSlider(1, 100, kv.get('time', 50));
+  slider_time = createSlider(1, 50, kv.get('time', 20));
   slider_time.parent(gtime);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
@@ -55,7 +55,7 @@ function setup() {
 
   gamp = createDiv('');
   gamp.position(15, h);
-  slider_amp = createSlider(10, canvas_h / 4, kv.get('amp', 10));
+  slider_amp = createSlider(10, canvas_h / 2, kv.get('amp', 10));
   slider_amp.parent(gamp);
   label_amp = createSpan(' - Tamaño +');
   label_amp.style('color', '#FFFFFF');
@@ -122,7 +122,7 @@ function draw() {
 
   data = old.data;
   wave = old.wave;
-  old.data = { x: 0, y: 0, j: 0, n: 0, r: 0};
+  old.data = { x: 0, y: 0, n: 0, r: 0};
 
   // Axis
   translate(0, 0);
@@ -144,11 +144,13 @@ function draw() {
   // Reset start point
   translate(canvas_w / 4, canvas_h / 2);
 
-  for (i = data.j; i < slider_terms.value(); i++) {
+  dt += 0.0005 * slider_time.value();
+
+  for (i = data.n; i < slider_terms.value(); i++) {
     let prevx = data.x;
     let prevy = data.y;
 
-    data.j = i;
+    data.n = i + 1;
 
     fncs.forEach(function(item, idx) {
       if (sel.value() == item.name) {
@@ -180,8 +182,6 @@ function draw() {
     vertex(i + canvas_w / 4 - ref, wave[i]);
   }
   endShape();
-
-  time += 0.0001 * slider_time.value();
 
   if (wave.length > canvas_w / 2) {
     wave.pop();

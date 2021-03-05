@@ -1,8 +1,9 @@
 function fcosine(data, radius) {
-  if (data.j < 2) {
-    data.y += radius * sin(time * Math.PI);
-    data.x += radius * cos(time * Math.PI) * Math.pow(-1, data.j);
-    data.r = radius;
+  if (data.n <= 2) {
+    data.r = radius / 2;
+    let w = dt * 2 * Math.PI;
+    data.y += data.r * sin(w);
+    data.x += data.r * cos(w) * Math.pow(-1, data.n);
   }
 }
 

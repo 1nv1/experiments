@@ -1,8 +1,10 @@
 function fsquare(data, radius) {
-  data.n = data.j * 2 + 1;
-  data.r = radius * (4 / (data.n * Math.PI));
-  data.x += data.r * cos(data.n * time * 2 * Math.PI);
-  data.y += data.r * sin(data.n * time * 2 * Math.PI);
+  let w = dt * 2 * Math.PI * data.n;
+  if (data.n % 2 != 0) {
+    data.r = radius * (4 / (data.n * Math.PI));
+    data.x += data.r * cos(w);
+    data.y += data.r * sin(w);
+  }
 }
 
 fncs.push({name: 'square', callback: fsquare});

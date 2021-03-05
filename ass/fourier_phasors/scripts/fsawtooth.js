@@ -1,8 +1,9 @@
 function fsawtooth(data, radius) {
-  data.n = data.j + 1;
-  data.r = radius * (-1 / (data.n * Math.PI));
-  data.x += data.r * cos(data.n * time * 2 * Math.PI);
-  data.y += data.r * sin(data.n * time * 2 * Math.PI);
+  let w = dt * 2 * Math.PI * data.n;
+  let f = (-1 / (data.n * Math.PI));
+  data.r = radius * f;
+  data.x += data.r * cos(w);
+  data.y += data.r * sin(w);
 }
 
 fncs.push({name: 'sawtooth', callback: fsawtooth});
