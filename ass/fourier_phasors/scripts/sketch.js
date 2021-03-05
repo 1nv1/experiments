@@ -37,7 +37,7 @@ function setup() {
 
   gterms = createDiv('');
   gterms.position(15, h);
-  slider_terms = createSlider(1, 20, kv.get('terms'));
+  slider_terms = createSlider(1, 20, kv.get('terms', 5));
   slider_terms.parent(gterms);
   label_terms = createSpan(' - Segmentos +');
   label_terms.style('color', '#FFFFFF');
@@ -46,7 +46,7 @@ function setup() {
 
   gtime = createDiv('');
   gtime.position(15, h);
-  slider_time = createSlider(1, 100, kv.get('time'));
+  slider_time = createSlider(1, 100, kv.get('time', 50));
   slider_time.parent(gtime);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
@@ -55,7 +55,7 @@ function setup() {
 
   gamp = createDiv('');
   gamp.position(15, h);
-  slider_amp = createSlider(10, canvas_h / 4, kv.get('amp'));
+  slider_amp = createSlider(10, canvas_h / 4, kv.get('amp', 10));
   slider_amp.parent(gamp);
   label_amp = createSpan(' - Tamaño +');
   label_amp.style('color', '#FFFFFF');
@@ -80,21 +80,18 @@ function setup() {
   label_orb.parent(gorb);
   selorb.option('Con');
   selorb.option('Sin');
-  selorb.selected(kv.get('orb'));
+  selorb.selected(kv.get('orb', 'Con'));
 
   fncs.forEach(function(item, idx) {
     sel.option(item.name);
   });
 
-  sel.selected(kv.get('function'));
+  sel.selected(kv.get('function', 'sine'));
 
-  if (kv.get('data') != 'undefined') {
-    old.data = kv.get('data');
-  }
+  old.data = kv.get('data', old.data);
 
-  if (kv.get('wave') != 'undefined') {
-    old.wave = kv.get('wave');
-  }
+  old.wave = kv.get('wave', old.wave);
+
 }
 
 function windowResized() {
