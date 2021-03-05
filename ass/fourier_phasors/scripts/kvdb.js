@@ -40,8 +40,12 @@ class kvdb {
     }
   }
 
-  get(key) {
+  get(key, dflt = null) {
     key = this.schema + "." + key;
+    if ((this.db.hasOwnProperty(key) == false)) {
+      return dflt;
+    }
+
     let value = this.db.getItem(key);
     if (typeof value == 'number') {
       return Number(value);
