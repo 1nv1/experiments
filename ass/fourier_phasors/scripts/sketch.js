@@ -22,9 +22,10 @@ let old = {
 let data = { x: 0, y: 0, j: 0, n: 0, r: 0};
 
 function setup() {
-  var w = 150;
-  var element = document.getElementById('p5canvas');
-  var positionInfo = element.getBoundingClientRect();
+  let kh = 30;
+  let h = 30;
+  let element = document.getElementById('p5canvas');
+  let positionInfo = element.getBoundingClientRect();
   canvas_h = positionInfo.height;
   canvas_w = positionInfo.width;
 
@@ -32,38 +33,46 @@ function setup() {
   console.log(kv.id());
 
   createCanvas(canvas_w, canvas_h);
-  text('Segmentos: ');
+  frameRate(30);
 
-  label_terms = createDiv('Segmentos: ');
-  label_terms.position(15, 15);
-  label_terms.style('color', '#FFFFFF');
+  gterms = createDiv('');
+  gterms.position(15, h);
   slider_terms = createSlider(1, 20, kv.get('terms'));
-  slider_terms.parent(label_terms);
-  w += w;
+  slider_terms.parent(gterms);
+  label_terms = createSpan(' Segmentos');
+  label_terms.style('color', '#FFFFFF');
+  label_terms.parent(gterms);
+  h += kh;
 
-  label_time = createDiv('Velocidad: ');
-  label_time.position(w, 15);
-  label_time.style('color', '#FFFFFF');
+  gtime = createDiv('');
+  gtime.position(15, h);
   slider_time = createSlider(1, 100, kv.get('time'));
-  slider_time.parent(label_time);
-  w += w;
+  slider_time.parent(gtime);
+  label_time = createSpan(' Velocidad');
+  label_time.style('color', '#FFFFFF');
+  label_time.parent(gtime);
+  h += kh;
 
-  label_amp = createDiv('Tamaño: ');
-  label_amp.position(w, 15);
-  label_amp.style('color', '#FFFFFF');
+  gamp = createDiv('');
+  gamp.position(15, h);
   slider_amp = createSlider(10, canvas_h / 4, kv.get('amp'));
-  slider_amp.parent(label_amp);
-  w += w;
+  slider_amp.parent(gamp);
+  label_amp = createSpan(' Tamaño');
+  label_amp.style('color', '#FFFFFF');
+  label_amp.parent(gamp);
+  h += kh;
 
-  label_func = createDiv('Funciones: ');
-  label_func.position(w, 15);
-  label_func.style('color', '#FFFFFF');
+  gfunc = createDiv('');
+  gfunc.position(15, h);
   sel = createSelect();
+  sel.parent(gfunc);
+  label_func = createSpan(' Función');
+  label_func.style('color', '#FFFFFF');
+  label_func.parent(gfunc);
 
   fncs.forEach(function(item, idx) {
     sel.option(item.name);
   });
-  sel.parent(label_func);
 
   sel.selected(kv.get('function'));
 
@@ -74,6 +83,14 @@ function setup() {
   if (kv.get('wave') != 'undefined') {
     old.wave = kv.get('wave');
   }
+}
+
+function windowResized() {
+  let element = document.getElementById('p5canvas');
+  let positionInfo = element.getBoundingClientRect();
+  canvas_w = positionInfo.width;
+  canvas_h = positionInfo.height;
+  resizeCanvas(canvas_w, canvas_h);
 }
 
 window.addEventListener("beforeunload", function (e) {
