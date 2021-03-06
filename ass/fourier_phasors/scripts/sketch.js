@@ -129,6 +129,10 @@ function draw() {
   wave = old.wave;
   old.data = { x: 0, y: 0, n: 0, r: 0};
 
+  translate(0, 0);
+
+  strokeWeight(2);
+
   // Grid
   stroke('#88916b');
   for (i = 0; i <= canvas_w; i += step_w) {
@@ -200,4 +204,26 @@ function draw() {
     wave.pop();
   }
   old.wave = wave;
+
+  // prevent default
+  return false;
+}
+
+function mouseWheel(event) {
+  let lsw = canvas_w / 8;
+  let liw = canvas_w / 64;
+
+  let lsh = canvas_h / 8;
+  let lih = canvas_h / 64;
+
+  let step = event.delta > 0 ? event.delta - 1 : event.delta + 1;
+  step_w = step > 0 ? step_w * step : step_w / -step;
+  step_w = step_w > lsw ? lsw : step_w;
+  step_w = step_w < liw ? liw : step_w;
+
+  step_h = step > 0 ? step_h * step : step_h / -step;
+  step_h = step_h > lsh ? lsh : step_h;
+  step_h = step_h < lih ? lih : step_h;
+  //uncomment to block page scrolling
+  return false;
 }
