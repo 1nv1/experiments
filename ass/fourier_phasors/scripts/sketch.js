@@ -163,9 +163,11 @@ function draw() {
 
   dt += 0.0005 * slider_time.value();
 
-  for (i = data.n; i < slider_terms.value(); i++) {
-    let prevx = data.x;
-    let prevy = data.y;
+  let prevx = 0, prevy = 0;
+  let limit = slider_terms.value();
+  let lastr = 0;
+
+  for (i = data.n; i < limit; i++) {
 
     data.n = i + 1;
 
@@ -179,12 +181,19 @@ function draw() {
 
     stroke('rgb(255, 0, 0)');
     noFill();
-    if (selorb.value() == 'Con')
-      ellipse(prevx, prevy, data.r * 2);
+    if (selorb.value() == 'Con') {
+      if (lastr != data.r) {
+        ellipse(prevx, prevy, data.r * 2);
+        lastr = data.r;
+      }
+    }
 
     stroke('rgb(0, 255,0)');
     line(prevx, prevy, data.x, data.y);
     ellipse(data.x, data.y, 4);
+
+    prevx = data.x;
+    prevy = data.y;
   }
   wave.unshift(data.y);
 
