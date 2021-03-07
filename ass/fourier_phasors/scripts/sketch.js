@@ -131,7 +131,7 @@ function draw() {
 
   translate(0, 0);
 
-  strokeWeight(2);
+  strokeWeight(1);
 
   // Grid
   stroke('#88916b');
