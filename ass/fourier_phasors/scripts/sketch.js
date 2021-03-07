@@ -38,11 +38,11 @@ function setup() {
   console.log(kv.id());
 
   createCanvas(canvas_w, canvas_h);
-  frameRate(30);
+  frameRate(15);
 
   gterms = createDiv('');
   gterms.position(15, h);
-  slider_terms = createSlider(1, 50, kv.get('terms', 5));
+  slider_terms = createSlider(1, 30, kv.get('terms', 5));
   slider_terms.parent(gterms);
   label_terms = createSpan(' - Armónicos +');
   label_terms.style('color', '#FFFFFF');
@@ -51,7 +51,7 @@ function setup() {
 
   gtime = createDiv('');
   gtime.position(15, h);
-  slider_time = createSlider(1, 40, kv.get('time', 20));
+  slider_time = createSlider(1, 30, kv.get('time', 20));
   slider_time.parent(gtime);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
