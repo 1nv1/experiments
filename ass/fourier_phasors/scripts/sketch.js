@@ -55,7 +55,7 @@ function setup() {
 
   gtime = createDiv('');
   gtime.position(15, h);
-  slider_time = createSlider(1, 30, kv.get('time', 20));
+  slider_time = createSlider(1, 30, kv.get('time', 5));
   slider_time.parent(gtime);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
@@ -64,7 +64,7 @@ function setup() {
 
   gamp = createDiv('');
   gamp.position(15, h);
-  slider_amp = createSlider(10, canvas_h / 2, kv.get('amp', 10));
+  slider_amp = createSlider(1, canvas_h / 2, kv.get('amp', 5));
   slider_amp.parent(gamp);
   label_amp = createSpan(' - Tamaño +');
   label_amp.style('color', '#FFFFFF');
