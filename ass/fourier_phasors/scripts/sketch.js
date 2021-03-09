@@ -4,6 +4,7 @@
 
 let dt = 0;
 let wave = [];
+let profile = [];
 let path = [];
 
 let slider_terms;
@@ -16,10 +17,13 @@ let canvas_w;
 
 let kv;
 let old = {
-  data: { x: 0, y: 0, n: 0, r: 0},
+  data: { x: 0, y: 0, n: 0, r: 0, g: false},
   wave: []
 };
-let data = { x: 0, y: 0, n: 0, r: 0};
+let data = { x: 0, y: 0, n: 0, r: 0, g: false};
+
+let old_dt = 0;
+let del = false;
 
 var step_w, step_h;
 
@@ -38,7 +42,7 @@ function setup() {
   console.log(kv.id());
 
   createCanvas(canvas_w, canvas_h);
-  frameRate(15);
+  frameRate(30);
 
   gterms = createDiv('');
   gterms.position(15, h);
@@ -74,6 +78,7 @@ function setup() {
   label_func = createSpan(' Función');
   label_func.style('color', '#FFFFFF');
   label_func.parent(gfunc);
+  sel.changed(fChanged);
   h += kh;
 
   gorb = createDiv('');
@@ -86,6 +91,18 @@ function setup() {
   selorb.option('Con');
   selorb.option('Sin');
   selorb.selected(kv.get('orb', 'Con'));
+  h += kh;
+
+  gtrace = createDiv('');
+  gtrace.position(15, h);
+  seltrace = createSelect();
+  seltrace.parent(gtrace);
+  label_trace = createSpan(' Trazo');
+  label_trace.style('color', '#FFFFFF');
+  label_trace.parent(gtrace);
+  seltrace.option('Con');
+  seltrace.option('Sin');
+  seltrace.selected(kv.get('trace', 'Con'));
 
   fncs.forEach(function(item, idx) {
     sel.option(item.name);
@@ -117,6 +134,7 @@ window.addEventListener("beforeunload", function (e) {
   kv.set('data', data);
   kv.set('wave', wave);
   kv.set('orb', selorb.value());
+  kv.set('trace', seltrace.value());
   return confirmationMessage;                            //Webkit, Safari, Chrome
 });
 
@@ -162,6 +180,7 @@ function draw() {
   translate(canvas_w / 4, canvas_h / 2);
 
   dt += 0.0005 * slider_time.value();
+  old_dt += 0.0005 * slider_time.value();
 
   let prevx = 0, prevy = 0;
   let limit = slider_terms.value();
@@ -198,6 +217,7 @@ function draw() {
   wave.unshift(data.y);
 
   let ref = (canvas_h / 2) + data.r;
+
   translate(ref, 0);
   stroke('rgb(0, 0, 255)');
   line(data.x - (canvas_h / 2) - data.r, data.y, canvas_w / 4 - ref, wave[0]);
@@ -213,6 +233,20 @@ function draw() {
     wave.pop();
   }
   old.wave = wave;
+
+  // Profile
+  if (seltrace.value() == 'Con') {
+    profile.unshift([data.x, data.y]);
+    translate(-ref, 0);
+    stroke('rgb(255, 120, 255)');
+    strokeWeight(2);
+    for (i = 0; i < profile.length; i++) {
+      point(profile[i][0], profile[i][1]);
+    }
+    if (old_dt > 10) {
+      profile.pop();
+    }
+  }
 
   // prevent default
   return false;
@@ -235,4 +269,9 @@ function mouseWheel(event) {
   step_h = step_h < lih ? lih : step_h;
   //uncomment to block page scrolling
   return false;
+}
+
+function fChanged() {
+  profile = [];
+  old_dt = 0;
 }
