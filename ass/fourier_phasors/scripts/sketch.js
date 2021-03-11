@@ -72,7 +72,7 @@ function setup() {
   divs['speed'].position(15, h);
   slider_time = createSlider(1, 30, kv.get('time', 5));
   slider_time.parent(divs['speed']);
-  label_time = createSpan(' - Velocidad +');
+  label_time = createSpan(' - Frecuencia +');
   label_time.style('color', '#FFFFFF');
   label_time.parent(divs['speed']);
   h += kh;
