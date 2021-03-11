@@ -3,6 +3,7 @@ class kvdb {
   constructor(schema = '') {
     this.db =localStorage;
     this.schema = schema;
+    this.is_new = false;
 
     this._uuid =  function() {
       var dt = new Date().getTime();
@@ -18,6 +19,7 @@ class kvdb {
     if (_id === null) {
       _id = this._uuid();
       this.db.setItem(k, _id);
+      this.is_new = true;
     }
   }
 
@@ -28,6 +30,10 @@ class kvdb {
       return false;
     }
     return true;
+  }
+
+  isNew() {
+    return this.is_new;
   }
 
   inc(key) {

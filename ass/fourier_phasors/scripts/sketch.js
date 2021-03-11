@@ -27,9 +27,19 @@ let del = false;
 
 var step_w, step_h;
 
+var sh = true;
+var divs = [];
+
+function fShowHide() {
+  sh = sh == true ? false : true;
+  for (var key in divs) {
+    divs[key].style('display', sh == true ? 'block' : 'none');
+  }
+}
+
 function setup() {
   let kh = 30;
-  let h = 30;
+  let h = 0;
   let element = document.getElementById('p5canvas');
   let positionInfo = element.getBoundingClientRect();
   canvas_h = positionInfo.height;
@@ -44,62 +54,67 @@ function setup() {
   createCanvas(canvas_w, canvas_h);
   frameRate(30);
 
-  gterms = createDiv('');
-  gterms.position(15, h);
+  btnShow = createButton('Show/Hide');
+  btnShow.position(15, h);
+  btnShow.mousePressed(fShowHide);
+  h += kh;
+
+  divs['armónicos'] = createDiv('');
+  divs['armónicos'].position(15, h);
   slider_terms = createSlider(1, 30, kv.get('terms', 5));
-  slider_terms.parent(gterms);
+  slider_terms.parent(divs['armónicos']);
   label_terms = createSpan(' - Armónicos +');
   label_terms.style('color', '#FFFFFF');
-  label_terms.parent(gterms);
+  label_terms.parent(divs['armónicos']);
   h += kh;
 
-  gtime = createDiv('');
-  gtime.position(15, h);
+  divs['speed'] = createDiv('');
+  divs['speed'].position(15, h);
   slider_time = createSlider(1, 30, kv.get('time', 5));
-  slider_time.parent(gtime);
+  slider_time.parent(divs['speed']);
   label_time = createSpan(' - Velocidad +');
   label_time.style('color', '#FFFFFF');
-  label_time.parent(gtime);
+  label_time.parent(divs['speed']);
   h += kh;
 
-  gamp = createDiv('');
-  gamp.position(15, h);
+  divs['amplitude'] = createDiv('');
+  divs['amplitude'].position(15, h);
   slider_amp = createSlider(1, canvas_h / 2, kv.get('amp', 5));
-  slider_amp.parent(gamp);
+  slider_amp.parent(divs['amplitude']);
   label_amp = createSpan(' - Tamaño +');
   label_amp.style('color', '#FFFFFF');
-  label_amp.parent(gamp);
+  label_amp.parent(divs['amplitude']);
   h += kh;
 
-  gfunc = createDiv('');
-  gfunc.position(15, h);
+  divs['functions'] = createDiv('');
+  divs['functions'].position(15, h);
   sel = createSelect();
-  sel.parent(gfunc);
+  sel.parent(divs['functions']);
   label_func = createSpan(' Función');
   label_func.style('color', '#FFFFFF');
-  label_func.parent(gfunc);
+  label_func.parent(divs['functions']);
   sel.changed(fChanged);
   h += kh;
 
-  gorb = createDiv('');
-  gorb.position(15, h);
+  divs['orbites'] = createDiv('');
+  divs['orbites'].position(15, h);
   selorb = createSelect();
-  selorb.parent(gorb);
+  selorb.parent(divs['orbites']);
   label_orb = createSpan(' Órbitas');
   label_orb.style('color', '#FFFFFF');
-  label_orb.parent(gorb);
+  label_orb.parent(divs['orbites']);
   selorb.option('Con');
   selorb.option('Sin');
   selorb.selected(kv.get('orb', 'Con'));
   h += kh;
 
-  gtrace = createDiv('');
-  gtrace.position(15, h);
+  divs['trace'] = createDiv('');
+  divs['trace'].position(15, h);
   seltrace = createSelect();
-  seltrace.parent(gtrace);
+  seltrace.parent(divs['trace']);
   label_trace = createSpan(' Trazo');
   label_trace.style('color', '#FFFFFF');
-  label_trace.parent(gtrace);
+  label_trace.parent(divs['trace']);
   seltrace.option('Con');
   seltrace.option('Sin');
   seltrace.selected(kv.get('trace', 'Con'));
@@ -243,7 +258,7 @@ function draw() {
     for (i = 0; i < profile.length; i++) {
       point(profile[i][0], profile[i][1]);
     }
-    if (old_dt > 10) {
+    if (old_dt > 4) {
       profile.pop();
     }
   }
