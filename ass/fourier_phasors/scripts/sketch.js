@@ -55,7 +55,7 @@ function setup() {
   frameRate(30);
 
   btnShow = createButton('Show/Hide');
-  btnShow.position(15, h);
+  btnShow.position(0, h);
   btnShow.mousePressed(fShowHide);
   h += kh;
 
@@ -200,6 +200,9 @@ function draw() {
   let prevx = 0, prevy = 0;
   let limit = slider_terms.value();
   let lastr = 0;
+
+  label_terms.html('- Armónicos + (' + limit + ')');
+
 
   for (i = data.n; i < limit; i++) {
 
