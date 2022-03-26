@@ -1,26 +1,29 @@
 class kvdb {
 
-  constructor(schema = '') {
-    this.db =localStorage;
-    this.schema = schema;
-    this.is_new = false;
+  constructor(schema = '_') {
 
-    this._uuid =  function() {
+    // UUID generator
+    this._uuid = function() {
       var dt = new Date().getTime();
       var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = (dt + Math.random()*16)%16 | 0;
         dt = Math.floor(dt/16);
-        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        return (c=='x' ? r : (r & 0x3 | 0x8)).toString(16);
       });
       return uuid;
     };
+
+    this.db = localStorage;
+    this.schema = schema;
+    this.is_new = false;
     let k = this.schema + '._id';
     let _id = this.db.getItem(k);
     if (_id === null) {
       _id = this._uuid();
       this.db.setItem(k, _id);
       this.is_new = true;
-    }
+    };
+
   }
 
   _isJ(s) {
@@ -87,7 +90,18 @@ class kvdb {
   }
 
   drop() {
-    this.db.clear();
+    var j, q;
+    var len = this.schema.length;
+    var arr = [];
+    q = this.db.length;
+    for (j = 0; j < q; j++){
+      if (this.db.key(j).substring(0, len) == this.schema)
+        arr.push(this.db.key(j));
+    }
+    q = arr.length;
+    for (j = 0; j < q; j++) {
+      this.db.removeItem(arr[j]);
+    }
   }
 
   id() {

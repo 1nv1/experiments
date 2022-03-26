@@ -150,7 +150,7 @@ window.addEventListener("beforeunload", function (e) {
   kv.set('wave', wave);
   kv.set('orb', selorb.value());
   kv.set('trace', seltrace.value());
-  return confirmationMessage;                            //Webkit, Safari, Chrome
+  return confirmationMessage;
 });
 
 function draw() {
